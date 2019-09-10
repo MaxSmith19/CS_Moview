@@ -1,14 +1,23 @@
-import tweepy, mysql.connector, re, csv, os
+import tweepy, mysql.connector, re, csv, os,time
 
-app = Flask(__name__, template_folder="D:\Coursework\Cs app\templates")
+from flask import Flask, render_template, request,redirect
+app = Flask(__name__)
 
-@app.route('/')
-def index():
-   return render_template("hello.html")
+@app.route('/main')
+def main():
+   return render_template('hello.html')
 
+@app.route("/handle_data", methods=["GET","POST"])
+def handle_data():
+    projectpath= request.form['projectFilePath']
+    return projectpath
+@app.route("/main/<movie>")      
+def displayMovie(projectpath):
+    return render_template("displayMovie.html",movie = projectpath)
+
+    
 if __name__ == '__main__':
    app.run(debug = True)
-
 #extracted from StackOverflow   
 #overwrites a method within the tweepy "streamListener" class so that the data can be written to a json file.
 # class MyStreamListener(tweepy.StreamListener):
@@ -94,7 +103,7 @@ def mining(api):
             analysis = TextBlob(FinalTweet)
             print(analysis.sentiment.polarity)
             if analysis.sentiment.polarity > 0:
-                PositiveTweets=PositiveTweets+
+                PositiveTweets=PositiveTweets+1
             if analysis.sentiment.polarity < 0:
                 NegativeTweets=NegativeTweets+1
             finalRating=50+PositiveTweets-NegativeTweets #Need to confirm this. (P/N)*100??
@@ -109,10 +118,8 @@ def removeEmoji(inputString):
 def CharOnly(inputString):
     #Also sourced from Stack Overflow
     return ' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t]) |(\w+:\/\/\S+)", " ", inputString).split()) 
-oAuth()
+
 
 # Movie TABLE CONSISTS OF: MovieID, name
 # tweets TABLE CONSISTS OF: TweetID, TweetText, MovieID - Removed, due to lack of necessity, as i can analyse them as i get them.
 # %s refers to a parameterized query, in which the user cannot use sql injection and destroy the database, or drop any tables which will be needed.
-
-oAuth()
