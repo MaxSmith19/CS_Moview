@@ -1,5 +1,5 @@
 import tweepy, mysql.connector, re, csv, os
-'''
+
 app = Flask(__name__, template_folder="D:\Coursework\Cs app\templates")
 
 @app.route('/')
@@ -8,7 +8,7 @@ def index():
 
 if __name__ == '__main__':
    app.run(debug = True)
-'''
+
 #extracted from StackOverflow   
 #overwrites a method within the tweepy "streamListener" class so that the data can be written to a json file.
 # class MyStreamListener(tweepy.StreamListener):
@@ -41,7 +41,7 @@ def oAuth():
     api = tweepy.API(auth)
     print("Authenticated")
     print(type(api))
-"""
+
 def appendTable(movieChoice):
     #host="databases.suffolkone.ac.uk",
     #user="MS42220",
@@ -114,5 +114,5 @@ oAuth()
 # Movie TABLE CONSISTS OF: MovieID, name
 # tweets TABLE CONSISTS OF: TweetID, TweetText, MovieID - Removed, due to lack of necessity, as i can analyse them as i get them.
 # %s refers to a parameterized query, in which the user cannot use sql injection and destroy the database, or drop any tables which will be needed.
-"""
+
 oAuth()
