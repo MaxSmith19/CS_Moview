@@ -2,7 +2,13 @@
 <html>
    <body>
    
-      <h1>Hello {{ name }}!</h1>
+      <h1>Welcome to Moview!</h1>
+      <p>To get started, enter the movie you would like to review:</p>
+
+      <form action="{{ url_for('handle_data') }}" method="POST">
+         <input type="text" name = "projectFilePath">
+         <input type="submit">
+      </form>
       
    </body>
 </html>

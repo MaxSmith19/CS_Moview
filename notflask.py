@@ -13,7 +13,7 @@ def handle_data():
     return projectpath
 @app.route("/main/<movie>")      
 def displayMovie(projectpath):
-    return render_template("displayMovie.html",movie = projectpath)
+    return render_template("displayMovie.html",)
 
     
 if __name__ == '__main__':
