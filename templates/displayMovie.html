@@ -1,8 +1,11 @@
 <!DOCTYPE html>
-<hmtl>
-
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/stylesheet.css') }}?v=693123434142341234123423443222343123423423411234231233">
+</head>
 <body>
-    <h1>{ { movieName } }</h1>
-</body>
+    <div class="logo"><h1>Moview</h1></div>
+    <h2 class="movieName">{{ movieName }}</h2>
+</body> 
 
-</hmtl>
+</html>
