@@ -1,19 +1,18 @@
-import tweepy, mysql.connector, re, csv, os,time
+import tweepy, mysql.connector, re, csv, os
 
-from flask import Flask, render_template, request,redirect
+from flask import Flask, render_template, request, redirect
 app = Flask(__name__)
 
-@app.route('/main')
+@app.route('/')
 def main():
    return render_template('hello.html')
 
 @app.route("/handle_data", methods=["GET","POST"])
 def handle_data():
-    projectpath= request.form['projectFilePath']
-    return projectpath
-@app.route("/main/<movie>")      
-def displayMovie(projectpath):
-    return render_template("displayMovie.html",)
+    if request.method == "POST":
+        projectpath=request.form["projectFilePath"]
+    return render_template("displayMovie.html",movieName=projectpath)
+
 
     
 if __name__ == '__main__':

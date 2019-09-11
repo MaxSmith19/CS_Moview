@@ -1,0 +1,15 @@
+.top{
+    font-family: sans-serif;    
+
+}
+.logo{
+    position: absolute;
+    left: 50%;
+    right: 50%;
+}
+.movieName{
+    position: absolute;
+    left: 25%;
+    right: 75%;
+    top: 20%;
+}
