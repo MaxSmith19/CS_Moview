@@ -6,12 +6,18 @@
     position: absolute;
     left: 50%;
     right: 50%;
+<<<<<<< HEAD
     font-family: Verdana;
+=======
+>>>>>>> 912f3c3db70963e2fe28367a669a9adfc43e74a4
 }
 .movieName{
     position: absolute;
     left: 25%;
     right: 75%;
     top: 20%;
+<<<<<<< HEAD
     font-family: sans-serif;
+=======
+>>>>>>> 912f3c3db70963e2fe28367a669a9adfc43e74a4
 }
