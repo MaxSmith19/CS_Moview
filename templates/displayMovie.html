@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/stylesheet.css') }}?v=693123434142341234123423443222343123423423411234231233">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/stylesheet.css') }}?v=61234231233">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans|Oswald&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div class="sidebar left"></div>
+    <div class="sidebar right"></div>
     <div class="logo"><h1>Moview</h1></div>
-    <h2 class="movieName">{{ movieName }}</h2>
+    <div clas="movieInfo">
+    <span style="white-space: nowrap" class="movieName">{{ movieName }}</spawn>
+    </div>
 </body> 
 
 </html>

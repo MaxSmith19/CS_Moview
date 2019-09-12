@@ -1,23 +1,50 @@
 .top{
-    font-family: sans-serif;    
+    font-family: 'Open Sans', sans-serif; 
 
 }
 .logo{
+    font-family: "Oswald", sans-serif;
     position: absolute;
     left: 50%;
     right: 50%;
-<<<<<<< HEAD
-    font-family: Verdana;
-=======
->>>>>>> 912f3c3db70963e2fe28367a669a9adfc43e74a4
 }
 .movieName{
     position: absolute;
-    left: 25%;
-    right: 75%;
+    left: 30%;
+    right: 70%;
     top: 20%;
-<<<<<<< HEAD
-    font-family: sans-serif;
-=======
->>>>>>> 912f3c3db70963e2fe28367a669a9adfc43e74a4
+    padding: 20px;
+    padding-right: 40%;
+    border: 5px solid black;
+    font-family: 'Oswald', sans-serif;
+    font-size: 2em;
+    background-color: silver;
+}
+.movieInfo{
+    padding: 200px;
+    border: 5px solid black;
+    font-family:'Open Sans', sans-serif;
+}
+body{
+    background-color: rgb(77, 76, 76);
+}
+.sidebar{
+    background-color: rgb(90, 2, 2);
+    border: 1px solid black;
+    width: 10%;
+    height: 100%;
+}
+.left{
+    position: absolute;
+    padding-left: 5%;
+    padding-top: 50px;
+    left: 0;
+    top: 0;
+}
+.right{
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding-right: 5%;
+    padding-top: 50px;
 }
