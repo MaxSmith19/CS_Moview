@@ -7,17 +7,12 @@
     position: absolute;
     left: 50%;
     right: 50%;
-<<<<<<< HEAD
-=======
-    font-family: Verdana;
->>>>>>> ab6721ada3d751e7ad361291d51aa17dea4253c6
 }
 .movieName{
     position: absolute;
     left: 30%;
     right: 70%;
     top: 20%;
-<<<<<<< HEAD
     padding: 20px;
     padding-right: 40%;
     border: 5px solid black;
@@ -52,7 +47,4 @@ body{
     top: 0;
     padding-right: 5%;
     padding-top: 50px;
-=======
-    font-family: sans-serif;
->>>>>>> ab6721ada3d751e7ad361291d51aa17dea4253c6
 }

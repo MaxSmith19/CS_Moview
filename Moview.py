@@ -1,4 +1,4 @@
-import tweepy, mysql.connector, re, csv, os
+import tweepy, mysql.connector, re, omdb
 """
 from flask import Flask, render_template, request
 app = Flask(__name__)
@@ -57,9 +57,6 @@ def appendTable(movieChoice):
     mydb.close()
 
 def mining(api):
-    PositiveTweets=0
-    NegativeTweets=0
-    finalRating=0
     mydb = mysql.connector.connect(
         host="databases.suffolkone.ac.uk",
         user="MS42220",
@@ -78,18 +75,24 @@ def mining(api):
     values= movieChoice, 
     mycursor.execute(sql, values)
     row_count = mycursor.rowcount
+    movieRating = 0
+    pEmoji=[":)",":D",":>",":P","C:"]
+    nEmoji=[":(","D:",":<","P:",">:(",":c"]
     if row_count ==0:
         for tweet in tweepy.Cursor(api.search,q=movieChoice+"-filter:retweets",count=10,lang="en",wait_on_rate_limit=True,tweet_mode="extended").items(100):
-            newTweet= removeEmoji(tweet.full_text)
-            FinalTweet=CharOnly(newTweet)
-            # analysis = TextBlob(FinalTweet)
-            # print(analysis.sentiment.polarity)
-            # if analysis.sentiment.polarity > 0:
-            #     PositiveTweets=PositiveTweets+1
-            # if analysis.sentiment.polarity < 0:
-            #     NegativeTweets=NegativeTweets+1
-            # finalRating=50+PositiveTweets-NegativeTweets #Need to confirm this. (P/N)*100??
-            # print("Percentage Rating = "+finalRating)
+            newTweet= removeEmoji(tweet.full_text) 
+            FinalTweet=CharOnly(newTweet) #removes unnecessary emojis and unreadable items from the string, to make it easier to analyse.           
+            with open("positiveWords.txt","r") as positiveDict:
+                pLine=positiveDict.readlines()
+                with open("negativeWords.txt","r") as negativeDict:
+                    nLine=negativeDict.readlines()
+                    for i in len(positiveDict):
+                        if pLine[i] in FinalTweet or (pEmoji in FinalTweet or pEmoji.lower()): 
+                            movieRating=movieRating+1
+                        if nLine[i] in FinalTweet or (nEmoji in FinalTweet or nEmoji.lower()):
+                            movieRating=movieRating-1
+                        #Emojis help to determine if a tweet is good or bad, very easily. .lower is used in case the lowercase variant is used.
+                        #currently it is only determined if it's good or bad, not how good or bad it is.
     else:
         print("This Movie already exists within the database.")
     appendTable(movieChoice)
