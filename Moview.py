@@ -1,4 +1,4 @@
-import tweepy, mysql.connector, re, omdb
+import tweepy, mysql.connector, re
 """
 from flask import Flask, render_template, request
 app = Flask(__name__)
@@ -76,27 +76,32 @@ def mining(api):
     mycursor.execute(sql, values)
     row_count = mycursor.rowcount
     movieRating = 0
-    pEmoji=[":)",":D",":>",":P","C:"]
-    nEmoji=[":(","D:",":<","P:",">:(",":c"]
     if row_count ==0:
         for tweet in tweepy.Cursor(api.search,q=movieChoice+"-filter:retweets",count=10,lang="en",wait_on_rate_limit=True,tweet_mode="extended").items(100):
             newTweet= removeEmoji(tweet.full_text) 
             FinalTweet=CharOnly(newTweet) #removes unnecessary emojis and unreadable items from the string, to make it easier to analyse.           
-            with open("positiveWords.txt","r") as positiveDict:
+            splitTweet=FinalTweet.split()
+            with open(r"Dictionary\\positiveWords.txt","r") as positiveDict:
                 pLine=positiveDict.readlines()
-                with open("negativeWords.txt","r") as negativeDict:
-                    nLine=negativeDict.readlines()
-                    for i in len(positiveDict):
-                        if pLine[i] in FinalTweet or (pEmoji in FinalTweet or pEmoji.lower()): 
-                            movieRating=movieRating+1
-                        if nLine[i] in FinalTweet or (nEmoji in FinalTweet or nEmoji.lower()):
-                            movieRating=movieRating-1
-                        #Emojis help to determine if a tweet is good or bad, very easily. .lower is used in case the lowercase variant is used.
+            with open(r"Dictionary\\negativeWords.txt","r") as negativeDict:
+                nLine=negativeDict.readlines()
+            for i in pLine:
+                for word in splitTweet:
+                    word=word.lower()
+                    i=i.lower()
+                    if i==word:
+                        movieRating=movieRating+1
+            for i in nLine:
+                for word in splitTweet:
+                    word=word.lower()
+                    i=i.lower()
+                    if i == word:  
+                        movieRating=movieRating-1
+            print(movieRating)
                         #currently it is only determined if it's good or bad, not how good or bad it is.
     else:
         print("This Movie already exists within the database.")
-    appendTable(movieChoice)
-
+        appendTable()
 #Stack overflow  - removes emojis from text, changing them to ascii instead.
 def removeEmoji(inputString):
     return inputString.encode('ascii', 'ignore').decode('ascii')
