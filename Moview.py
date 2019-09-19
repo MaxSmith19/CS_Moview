@@ -1,4 +1,4 @@
-import tweepy, mysql.connector, re
+import tweepy, mysql.connector, re, math
 """
 from flask import Flask, render_template, request
 app = Flask(__name__)
@@ -76,29 +76,42 @@ def mining(api):
     mycursor.execute(sql, values)
     row_count = mycursor.rowcount
     movieRating = 0
+    ratingList=[]
+    movieAverage=0
+    count=100
+    movieP=0
+    movieN=0
     if row_count ==0:
-        for tweet in tweepy.Cursor(api.search,q=movieChoice+"-filter:retweets",count=10,lang="en",wait_on_rate_limit=True,tweet_mode="extended").items(100):
+        for tweet in tweepy.Cursor(api.search,q=movieChoice+"-filter:retweets",count=count,lang="en",wait_on_rate_limit=True,tweet_mode="extended").items(count):
             newTweet= removeEmoji(tweet.full_text) 
             FinalTweet=CharOnly(newTweet) #removes unnecessary emojis and unreadable items from the string, to make it easier to analyse.           
             splitTweet=FinalTweet.split()
             with open(r"Dictionary\\positiveWords.txt","r") as positiveDict:
-                pLine=positiveDict.readlines()
+                pLine=positiveDict.readlines() #CHANGE THIS TO USE THE WEIGHTED FILE
             with open(r"Dictionary\\negativeWords.txt","r") as negativeDict:
                 nLine=negativeDict.readlines()
-            for i in pLine:
-                for word in splitTweet:
-                    word=word.lower()
-                    i=i.lower()
-                    if i==word:
+            for word in splitTweet: #for each word in tweet
+                for pw in pLine: #for each positive word in the positive file
+                    word=word.lower().strip() #lowercase
+                    pw=pw.lower().strip()#lowercase
+                    if pw in word:
                         movieRating=movieRating+1
-            for i in nLine:
-                for word in splitTweet:
-                    word=word.lower()
-                    i=i.lower()
-                    if i == word:  
+                        break
+                for iw in nLine:
+                    word=word.lower().strip()
+                    iw=iw.lower().strip()
+                    if iw in word:
                         movieRating=movieRating-1
-            print(movieRating)
-                        #currently it is only determined if it's good or bad, not how good or bad it is.
+                        break
+            if movieRating>0:
+                ratingList.append("Positive")
+            if movieRating<=0:
+                ratingList.append("Negative")
+        movieP = ratingList.count("Positive")
+        movieN = ratingList.count("Negative")
+        movieAverage=movieP/movieN*100
+        print(str(movieAverage))
+        #currently it is only determined if it's good or bad, not how good or bad it is.
     else:
         print("This Movie already exists within the database.")
         appendTable()
