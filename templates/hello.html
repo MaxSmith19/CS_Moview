@@ -1,14 +1,17 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-   <body>
-   
-      <h1>Welcome to Moview!</h1>
-      <p>To get started, enter the movie you would like to review:</p>
-
-      <form action="{{ url_for('handle_data') }}" method="POST">
-         <input type="text" name = "projectFilePath">
-         <input type="submit">
-      </form>
-      
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/helloStylesheet.css') }}?v=14446474644132465413443">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans|Oswald&display=swap" rel="stylesheet">
+</head>
+<body>
+        <div class="sidebar left"></div>
+        <div class="sidebar right"></div>
+        <div class="logo"><h1>Moview</h1></div>
+        
+            <form class="searchBar" action="{{ url_for('handle_data') }}" method="POST">
+                <input type="text" name = "projectFilePath">
+            </form>        
+    
    </body>
 </html>

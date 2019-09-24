@@ -1,0 +1,46 @@
+.logo{
+    font-family: "Oswald", sans-serif;
+    position: absolute;
+    left: 50%;
+    right: 50%;
+}
+.searchText{
+    position: absolute;
+    left: 50%;
+    right: 50%;
+    top: 10%;  
+}
+body{
+    background-color: rgb(77, 76, 76);
+}
+.sidebar{
+    background-color: rgb(90, 2, 2);
+    border: 1px solid black;
+    width: 10%;
+    height: 100%;
+}
+.left{
+    position: absolute;
+    padding-left: 5%;
+    padding-top: 50px;
+    left: 0;
+    top: 0;
+}
+.right{
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding-right: 5%;
+    padding-top: 50px;
+}
+input{
+    position: absolute;
+    left: 50%;
+    right: 50%;
+    top: 25%;
+    width: 20%;
+}
+.submit{
+    position:absolute;
+    left:70%;
+}
