@@ -1,14 +1,8 @@
-.logo{
+ .logo{
     font-family: "Oswald", sans-serif;
     position: absolute;
     left: 50%;
     right: 50%;
-}
-.searchText{
-    position: absolute;
-    left: 50%;
-    right: 50%;
-    top: 10%;  
 }
 body{
     background-color: rgb(77, 76, 76);
@@ -33,14 +27,29 @@ body{
     padding-right: 5%;
     padding-top: 50px;
 }
-input{
+.center{
+    position:absolute;
+    left:15.2%;
+    width:69.7%;
+    height:100%;
+}
+.searchBar{
     position: absolute;
-    left: 50%;
-    right: 50%;
-    top: 25%;
-    width: 20%;
+    left:20%;
+    right:80%;
+    top:15%;
+    height: 30px;
+    width: 60%;
 }
 .submit{
-    position:absolute;
-    left:70%;
+    position: absolute;
+    top: 15%;
+    right:18%;
+    height: 36px;
+}
+form > div {
+    position: relative;
+  }
+form > div > label {
+    position: absolute;
 }

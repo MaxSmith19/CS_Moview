@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/helloStylesheet.css') }}?v=14446474644132465413443">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/helloStylesheet.css') }}?v=874511335478946124161277317651675121372137516751372137516513712371576127312751672137217517621761527612765176127615672176126712">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans|Oswald&display=swap" rel="stylesheet">
-</head>
-<body>
-        <div class="sidebar left"></div>
-        <div class="sidebar right"></div>
-        <div class="logo"><h1>Moview</h1></div>
-        
-            <form class="searchBar" action="{{ url_for('handle_data') }}" method="POST">
-                <input type="text" name = "projectFilePath">
-            </form>        
-    
-   </body>
+    <body> 
+          <div class="sidebar left"></div>
+          <div class="center">
+            <h1 class="logo">Moview</h1>
+            <form action="{{ url_for('handle_data') }}" method="POST">
+                <input class="searchBar" id="projectFilePath" type="text" name = "projectFilePath" placeholder="Enter your movie!">
+                <input type="Submit" class="submit">
+            </form> 
+          </div>
+          <div class="sidebar right"></div>
+    </body>
 </html>

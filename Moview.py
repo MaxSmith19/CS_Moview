@@ -2,19 +2,7 @@ import tweepy, mysql.connector, re, math
 from flask import Flask, render_template, request
 app = Flask(__name__)
 
-@app.route('/') 
-def main():
-   return render_template('hello.html')
 
-@app.route("/handle_data", methods=["GET","POST"])
-def handle_data():
-    if request.method == "POST":
-        projectpath=request.form["projectFilePath"]
-    return render_template("displayMovie.html",movieName=projectpath)
-    
-if __name__ == '__main__':
-   app.run(debug = True)
-"""
 def oAuth():
     consumer_token="DofAPsDVn3kOFxx3tlsRpZEag"
     consumer_secret="gKEmykLbzTQjEr9VR7fcWuSFwtnhlns1vFNkd8qCxrVPWaa5f0"
@@ -26,10 +14,10 @@ def oAuth():
     auth.set_access_token(access_token, access_secret)
     api = tweepy.API(auth)
     print("Authenticated")
-    mining(api)
+    return api
+
 
 def appendTable(movieChoice):
-    pass
     mydb= mysql.connector.connect(
         host="databases.suffolkone.ac.uk",
         user="MS42220",
@@ -54,7 +42,7 @@ def appendTable(movieChoice):
     print(mycursor.rowcount, "record inserted.")
     mydb.close()
 
-def mining(api):
+def mining(movieChoice):
     mydb = mysql.connector.connect(
         host="databases.suffolkone.ac.uk",
         user="MS42220",
@@ -66,8 +54,8 @@ def mining(api):
     mycursor.execute(sql)
     myresult = mycursor.fetchone() #Should get the final ID, so that i can assign the next ID number and not have the need for auto increment
     intID=int(myresult[0])+1
-        
-    print("What movie would you like to review?")
+    
+    oAuth()
     movieChoice=input("... ")
     sql = "SELECT * FROM movie WHERE movieName = %s"
     values= movieChoice, 
@@ -128,8 +116,28 @@ def removeEmoji(inputString):
 def CharOnly(inputString):
     #Also sourced from Stack Overflow
     return ' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t]) |(\w+:\/\/\S+)", " ", inputString).split()) 
-"""
-oAuth()
+
+
+@app.route('/') 
+def main():
+    return render_template('hello.html')
+
+@app.route("/handle_data", methods=["GET","POST"])
+def handle_data():
+    if request.method == "POST":
+        projectpath=request.form["projectFilePath"]
+        return render_template("displayMovie.html",movieName=projectpath)
+    elif request.method == "GET":
+        print(projectpath)
+        mining(projectpath)
+        return render_template("displayMovie.html",movieName=projectpath)
+
+    
+if __name__ == '__main__':
+   app.run(debug = True)
+
+
+
 # Movie TABLE CONSISTS OF: MovieID, name
 # tweets TABLE CONSISTS OF: TweetID, TweetText, MovieID - Removed, due to lack of necessity, as i can analyse them as i get them.
 # %s refers to a parameterized query, in which the user cannot use sql injection and destroy the database, or drop any tables which will be needed.
