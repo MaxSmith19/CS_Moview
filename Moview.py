@@ -42,7 +42,7 @@ def appendTable(movieChoice):
     print(mycursor.rowcount, "record inserted.")
     mydb.close()
 
-def mining(movieChoice):
+def mining(api,movieChoice):
     mydb = mysql.connector.connect(
         host="databases.suffolkone.ac.uk",
         user="MS42220",
@@ -55,18 +55,13 @@ def mining(movieChoice):
     myresult = mycursor.fetchone() #Should get the final ID, so that i can assign the next ID number and not have the need for auto increment
     intID=int(myresult[0])+1
     
-    oAuth()
-    movieChoice=input("... ")
     sql = "SELECT * FROM movie WHERE movieName = %s"
     values= movieChoice, 
     mycursor.execute(sql, values)
     row_count = mycursor.rowcount
-    movieRating = 0
-    ratingList=[]
+    tweetRating = 0
     movieAverage=1
     count=100
-    movieP=0
-    movieN=0
     movieTotal=0
     try:
         if row_count ==0:
@@ -83,18 +78,18 @@ def mining(movieChoice):
                         word=word.lower().strip() #lowercase
                         pw=pw.lower().strip()#lowercase
                         if pw in word:
-                            movieRating=movieRating+3
+                            tweetRating=tweetRating+3
                             break
                     for iw in nLine:
                         word=word.lower().strip()
                         iw=iw.lower().strip()
                         if iw in word:
-                            movieRating=movieRating-1
+                            tweetRating=tweetRating-1
                             break
-                    movieTotal=movieTotal+movieRating
-            #     if movieRating>0:
+                    movieTotal=movieTotal+tweetRating
+            #     if tweetRating>0:
             #         ratingList.append("Positive")
-            #     if movieRating<=0:
+            #     if tweetRating<=0:
             #         ratingList.append("Negative")
             # movieP = ratingList.count("Positive")
             # movieN = ratingList.count("Negative")
@@ -126,10 +121,8 @@ def main():
 def handle_data():
     if request.method == "POST":
         projectpath=request.form["projectFilePath"]
-        return render_template("displayMovie.html",movieName=projectpath)
-    elif request.method == "GET":
-        print(projectpath)
-        mining(projectpath)
+        api=oAuth()
+        mining(api,projectpath)
         return render_template("displayMovie.html",movieName=projectpath)
 
     
