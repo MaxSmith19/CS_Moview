@@ -1,4 +1,4 @@
-import tweepy, mysql.connector, re, omdb, json
+import tweepy, mysql.connector, re, omdb, json, werkzeug
 from flask import Flask, render_template, request, redirect, url_for
 app = Flask(__name__)
 
@@ -119,15 +119,19 @@ def main():
 
 @app.route("/handle_data", methods=["GET","POST"])
 def handle_data():
-    projectpath=request.form["projectFilePath"]
-    api=oAuth()
-    movieInfo=omdb.search_movie(projectpath)
-    print(movieInfo)
-    if len(movieInfo) >0:
-        mining(api,projectpath)
-        return render_template("displayMovie.html",movieName=projectpath)
-    else:
-        return render_template("mainError.html", error="jeeeee")
+    try:
+        projectpath=request.form["projectFilePath"]
+        projectpath=projectpath.upper()
+        api=oAuth()
+        movieInfo=omdb.search_movie(projectpath)
+        raw=movieInfo[0]
+        for i in raw:
+            if raw[i].upper() == projectpath:
+                return render_template("DisplayMovie.html", movieName=projectpath)
+            else:
+                return render_template("mainError.html", error="This movie does not exist, try again.")
+    except werkzeug.exceptions.BadRequestKeyError:
+        return redirect(url_for("main"))
     
 
     

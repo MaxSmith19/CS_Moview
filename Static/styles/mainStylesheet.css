@@ -5,7 +5,7 @@
     right: 50%;
 }
 body{
-    background-color: rgb(77, 76, 76);
+    background-color: rgb(100, 100, 100);
 }
 .sidebar{
     background-color: rgb(90, 2, 2);
@@ -55,7 +55,13 @@ form > div > label {
 }
 .Error{
     position: absolute;
-    top: 25%;
+    top: 30%;
     left: 29%;
-    right: 71%
+    right: 71%;
+    font-family: 'Turret Road', cursive;
+    color: rgb(100, 11, 11)
+}
+.eHeading{
+    position: absolute;
+    top: 25%
 }
