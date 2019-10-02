@@ -1,6 +1,10 @@
-import tweepy, mysql.connector, re, math
-from flask import Flask, render_template, request
+import tweepy, mysql.connector, re, omdb, json
+from flask import Flask, render_template, request, redirect, url_for
 app = Flask(__name__)
+
+OMDB_API_KEY = "9537ab6c"
+omdb.set_default('apikey', OMDB_API_KEY)
+omdb.set_default('tomatoes', True)
 
 
 def oAuth():
@@ -52,9 +56,6 @@ def mining(api,movieChoice):
     mycursor= mydb.cursor(buffered=True)
     sql="SELECT * FROM movie ORDER BY movieID DESC"
     mycursor.execute(sql)
-    myresult = mycursor.fetchone() #Should get the final ID, so that i can assign the next ID number and not have the need for auto increment
-    intID=int(myresult[0])+1
-    
     sql = "SELECT * FROM movie WHERE movieName = %s"
     values= movieChoice, 
     mycursor.execute(sql, values)
@@ -96,13 +97,12 @@ def mining(api,movieChoice):
             # movieAverage=movieP/movieN 
             print(movieTotal/100)
             print(movieAverage)
+            appendTable(movieChoice)
         else:
             print("This Movie already exists within the database.")
-            appendTable(movieChoice)
     except ZeroDivisionError:
         movieAverage+1
-    finally:
-        appendTable(movieChoice)
+    
     #currently it is only determined if it's good or bad, not how good or bad it is.
 
 #Stack overflow  - removes emojis from text, changing them to ascii instead.
@@ -115,15 +115,20 @@ def CharOnly(inputString):
 
 @app.route('/') 
 def main():
-    return render_template('hello.html')
+    return render_template('main.html')
 
 @app.route("/handle_data", methods=["GET","POST"])
 def handle_data():
-    if request.method == "POST":
-        projectpath=request.form["projectFilePath"]
-        api=oAuth()
+    projectpath=request.form["projectFilePath"]
+    api=oAuth()
+    movieInfo=omdb.search_movie(projectpath)
+    print(movieInfo)
+    if len(movieInfo) >0:
         mining(api,projectpath)
         return render_template("displayMovie.html",movieName=projectpath)
+    else:
+        return render_template("mainError.html", error="jeeeee")
+    
 
     
 if __name__ == '__main__':

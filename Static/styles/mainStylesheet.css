@@ -53,3 +53,9 @@ form > div {
 form > div > label {
     position: absolute;
 }
+.Error{
+    position: absolute;
+    top: 25%;
+    left: 29%;
+    right: 71%
+}
