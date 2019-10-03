@@ -7,6 +7,9 @@
     position: absolute;
     left: 50%;
     right: 50%;
+    text-decoration: none;
+    color: black;
+    font-size: 1.5em;
 }
 .movieName{
     position: absolute;
@@ -17,7 +20,7 @@
     padding-right: 40%;
     border: 5px solid black;
     font-family: 'Oswald', sans-serif;
-    font-size: 2em;
+    font-size: 1.5em;
     background-color: silver;
 }
 .movieInfo{
@@ -25,7 +28,7 @@
     font-family:'Open Sans', sans-serif;
 }
 body{
-    background-color: rgb(77, 76, 76);
+    background-color: rgb(100, 100, 100);
 }
 .sidebar{
     background-color: rgb(90, 2, 2);

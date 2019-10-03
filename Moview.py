@@ -1,4 +1,4 @@
-import tweepy, mysql.connector, re, omdb, json, werkzeug
+import tweepy, mysql.connector, re, omdb, json, werkzeug, string
 from flask import Flask, render_template, request, redirect, url_for
 app = Flask(__name__)
 
@@ -37,14 +37,18 @@ def appendTable(movieChoice):
     mycursor= mydb.cursor(buffered=True)
     sql="SELECT * FROM movie ORDER BY movieID DESC"
     mycursor.execute(sql)
-    myresult = mycursor.fetchone() #Should get the final ID, so that i can assign the next ID number and not have the need for auto increment
+    myresult = mycursor.fetchone() #Should get the final ID, so that i can assign the next ID number 
+                                   #and not have the need for auto increment
     intID=int(myresult[0])+1
+    #This will get the next movieID required for the movie table
     sql="INSERT INTO movie(MovieID,MovieName) VALUES (%s, %s)"
     values = (intID,movieChoice)
     mycursor.execute(sql, values)
     mydb.commit()
     print(mycursor.rowcount, "record inserted.")
+    #visual help, to show how many records have been inserted into the database
     mydb.close()
+    #close the database
 
 def mining(api,movieChoice):
     mydb = mysql.connector.connect(
@@ -55,23 +59,32 @@ def mining(api,movieChoice):
         )
     mycursor= mydb.cursor(buffered=True)
     sql="SELECT * FROM movie ORDER BY movieID DESC"
+    #select everything and order it by movieID descending.
     mycursor.execute(sql)
     sql = "SELECT * FROM movie WHERE movieName = %s"
-    values= movieChoice, 
+    # %s is used to create parameterised queries, so that any tweets containing "drop table movie" doesnt delete 
+    # my table.
+    values= movieChoice, #<-- DO NOT REMOVE THIS COMMA
+    #select all information where the movieName is equal to movieChoice    
     mycursor.execute(sql, values)
+    #executes the above SQL
     row_count = mycursor.rowcount
-    tweetRating = 0
-    movieAverage=1
-    count=100
-    movieTotal=0
+    #row count is the amount of rows the sql gave back.
+    tweetRating = 0 #Rating of the tweet (int)
+    movieTotal=0 #rating of the movie before being averaged
+    movieAverage=1 #final rating of the movie  (int)
+    COUNT=100 #constant containing the amount of tweets per review
     try:
-        if row_count ==0:
-            for tweet in tweepy.Cursor(api.search,q=movieChoice+"-filter:retweets",count=count,lang="en",wait_on_rate_limit=True,tweet_mode="extended").items(count):
+        if row_count ==0: #If the movie has not been reviewed before THEN
+            for tweet in tweepy.Cursor(api.search,q=movieChoice+"-filter:retweets",count=COUNT,lang="en",wait_on_rate_limit=True,tweet_mode="extended").items(COUNT):
+                #Tweepy cursor creates an instance temporarily which allows tweets to be taken from the api
                 newTweet= removeEmoji(tweet.full_text) 
-                FinalTweet=CharOnly(newTweet) #removes unnecessary emojis and unreadable items from the string, to make it easier to analyse.           
-                splitTweet=FinalTweet.split()
+                FinalTweet=CharOnly(newTweet)   #removes unnecessary emojis and unreadable items from the string, 
+                                                #to make it easier to analyse
+                splitTweet=FinalTweet.split() #splits the tweet into each seperate word
                 with open(r"Dictionary\\positiveWords.txt","r") as positiveDict:
-                    pLine=positiveDict.readlines() #CHANGE THIS TO USE THE WEIGHTED FILE
+                    pLine=positiveDict.readlines()
+                    #reads every line in the file (in this case, each line is one word.)
                 with open(r"Dictionary\\negativeWords.txt","r") as negativeDict:
                     nLine=negativeDict.readlines()
                 for word in splitTweet: #for each word in tweet
@@ -79,8 +92,12 @@ def mining(api,movieChoice):
                         word=word.lower().strip() #lowercase
                         pw=pw.lower().strip()#lowercase
                         if pw in word:
+                            #if the word in the file is equal to the word in the tweet.
                             tweetRating=tweetRating+3
+                            #I felt this was a good weight, as there are over 2x more 
+                            # negative words than positive within the file.
                             break
+                            #out of the loop, so that it can continue onto the next word to analyse.
                     for iw in nLine:
                         word=word.lower().strip()
                         iw=iw.lower().strip()
@@ -95,8 +112,6 @@ def mining(api,movieChoice):
             # movieP = ratingList.count("Positive")
             # movieN = ratingList.count("Negative")
             # movieAverage=movieP/movieN 
-            print(movieTotal/100)
-            print(movieAverage)
             appendTable(movieChoice)
         else:
             print("This Movie already exists within the database.")
@@ -120,19 +135,25 @@ def main():
 @app.route("/handle_data", methods=["GET","POST"])
 def handle_data():
     try:
-        projectpath=request.form["projectFilePath"]
-        projectpath=projectpath.upper()
+        movieChoice=request.form["projectFilePath"]
+        movieChoice=movieChoice.upper()
         api=oAuth()
-        movieInfo=omdb.search_movie(projectpath)
+        movieInfo=omdb.search_movie(movieChoice)
         raw=movieInfo[0]
         for i in raw:
-            if raw[i].upper() == projectpath:
-                return render_template("DisplayMovie.html", movieName=projectpath)
+            raw[i].split(" ")
+            noPunc=raw[i].translate(str.maketrans(".,;!£$%^&*()'", '             ', string.punctuation))
+            if noPunc.upper() == movieChoice or raw[i].upper() == movieChoice:
+                mining(api, movieChoice)
+                return render_template("DisplayMovie.html", movieName=movieChoice)
             else:
                 return render_template("mainError.html", error="This movie does not exist, try again.")
     except werkzeug.exceptions.BadRequestKeyError:
         return redirect(url_for("main"))
-    
+    except IndexError:
+       return render_template("mainError.html", error="This movie does not exist, try again.")
+    except KeyError:
+        return redirect(url_for("main"))  
 
     
 if __name__ == '__main__':

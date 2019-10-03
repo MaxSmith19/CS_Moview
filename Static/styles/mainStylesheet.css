@@ -40,12 +40,14 @@ body{
     top:15%;
     height: 30px;
     width: 60%;
+    border: 2px solid darkred;
 }
 .submit{
     position: absolute;
     top: 15%;
     right:18%;
     height: 36px;
+    border: 2px solid darkred
 }
 form > div {
     position: relative;
