@@ -20,7 +20,40 @@ def oAuth():
     print("Authenticated")
     return api
 
+def movieInfo(movieChoice):
+    mydb= mysql.connector.connect(
+        host="databases.suffolkone.ac.uk",
+        user="MS42220",
+        passwd="6vIKXUlf",
+        database="ms42220_moview"
+    )
+    mycursor=mydb.cursor(buffered=True)
+    print("in here")
+    print(movieChoice)
+    timeYear=0
+    img=""
+    rating=""
+    plot=""
+    externalRatings=[]
+    genre=""
+    movieInfo=omdb.get(title=movieChoice, tomatoes=True, fullplot=True)
+    print(movieInfo)
+    for i in movieInfo:
+        timeYear=movieInfo[1]
+        rating=movieInfo[2]
+        genre=movieInfo[4]
+        plot=movieInfo[8]
+        img=movieInfo[12]
+        externalRatings=movieInfo[13]
+        print("DEEEEEEEEE")
+        break
+    print("hm")
+    sql= "insert into movieInfo(timeYear, rating, genre, plot, img) values (%s, %s, %s, %s, %s)"
+    values=(timeYear, rating, genre, plot, img)
+    mycursor.execute(sql,values)
 
+
+    
 def appendTable(movieChoice):
     mydb= mysql.connector.connect(
         host="databases.suffolkone.ac.uk",
@@ -28,12 +61,6 @@ def appendTable(movieChoice):
         passwd="6vIKXUlf",
         database="ms42220_moview"
     )
-    # mydb = mysql.connector.connect(
-    #     host="localhost",
-    #     user="root",
-    #     passwd="bilbobaggins",
-    #     database="mydb"
-    #     )
     mycursor= mydb.cursor(buffered=True)
     sql="SELECT * FROM movie ORDER BY movieID DESC"
     mycursor.execute(sql)
@@ -49,14 +76,16 @@ def appendTable(movieChoice):
     #visual help, to show how many records have been inserted into the database
     mydb.close()
     #close the database
+    movieInfo(movieChoice)
 
-def mining(api,movieChoice):
+def mining(movieChoice):
     mydb = mysql.connector.connect(
         host="databases.suffolkone.ac.uk",
         user="MS42220",
         passwd="6vIKXUlf",
         database="ms42220_moview"
         )
+    api=oAuth()
     mycursor= mydb.cursor(buffered=True)
     sql="SELECT * FROM movie ORDER BY movieID DESC"
     #select everything and order it by movieID descending.
@@ -144,7 +173,8 @@ def handle_data():
             raw[i].split(" ")
             noPunc=raw[i].translate(str.maketrans(".,;!£$%^&*()'", '             ', string.punctuation))
             if noPunc.upper() == movieChoice or raw[i].upper() == movieChoice:
-                mining(api, movieChoice)
+                movieChoice=raw[i]
+                mining(movieChoice)
                 return render_template("DisplayMovie.html", movieName=movieChoice)
             else:
                 return render_template("mainError.html", error="This movie does not exist, try again.")
