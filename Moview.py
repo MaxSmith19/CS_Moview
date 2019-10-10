@@ -20,7 +20,23 @@ def oAuth():
     print("Authenticated")
     return api
 
-def movieInfo(movieChoice):
+def getMovieMeta(movieChoice):
+    mydb=mysql.connector.connect(
+        host="databases.suffolkone.ac.uk",
+        user="MS42220",
+        passwd="6vIKXUlf",
+        database="ms42220_moview"
+    )
+    mycursor=mydb.cursor(buffered=True)
+    sql = "SELECT * from movieInfo WHERE movieName = %s"
+    values=movieChoice,
+    mycursor.execute(sql,values)
+    mydb.commit()
+    movieMeta=mycursor.fetchone()
+    mydb.close()
+    return movieMeta
+
+def movieInfo(movieChoice, intID, movieTotal):
     mydb= mysql.connector.connect(
         host="databases.suffolkone.ac.uk",
         user="MS42220",
@@ -28,33 +44,24 @@ def movieInfo(movieChoice):
         database="ms42220_moview"
     )
     mycursor=mydb.cursor(buffered=True)
-    print("in here")
-    print(movieChoice)
-    timeYear=0
-    img=""
-    rating=""
-    plot=""
-    externalRatings=[]
-    genre=""
     movieInfo=omdb.get(title=movieChoice, tomatoes=True, fullplot=True)
-    print(movieInfo)
-    for i in movieInfo:
-        timeYear=movieInfo[1]
-        rating=movieInfo[2]
-        genre=movieInfo[4]
-        plot=movieInfo[8]
-        img=movieInfo[12]
-        externalRatings=movieInfo[13]
-        print("DEEEEEEEEE")
-        break
-    print("hm")
-    sql= "insert into movieInfo(timeYear, rating, genre, plot, img) values (%s, %s, %s, %s, %s)"
-    values=(timeYear, rating, genre, plot, img)
+    timeYear=movieInfo["year"]
+    img=movieInfo["poster"]
+    rating=movieInfo["rated"]
+    plot=movieInfo["plot"]
+    genre=movieInfo["genre"]
+    imdb=movieInfo["imdb_rating"]
+    metacritic=movieInfo["metascore"]
+    sql= "insert into movieinfo(movieName,timeYear, rating, plot, img, genre, imdb, metacritic, movieTotal, movieID) values (%s, %s, %s, %s, %s,%s, %s, %s, %s, %s)"
+    values=(movieChoice,timeYear, rating, plot, img, genre, imdb, metacritic, movieTotal, intID)
     mycursor.execute(sql,values)
+    mydb.commit()
+    print(mycursor.rowcount, "record inserted.")
+    mydb.close()
 
 
     
-def appendTable(movieChoice):
+def appendTable(movieChoice,movieTotal):
     mydb= mysql.connector.connect(
         host="databases.suffolkone.ac.uk",
         user="MS42220",
@@ -76,7 +83,7 @@ def appendTable(movieChoice):
     #visual help, to show how many records have been inserted into the database
     mydb.close()
     #close the database
-    movieInfo(movieChoice)
+    movieInfo(movieChoice, intID, movieTotal)
 
 def mining(movieChoice):
     mydb = mysql.connector.connect(
@@ -100,9 +107,9 @@ def mining(movieChoice):
     row_count = mycursor.rowcount
     #row count is the amount of rows the sql gave back.
     tweetRating = 0 #Rating of the tweet (int)
-    movieTotal=0 #rating of the movie before being averaged
     movieAverage=1 #final rating of the movie  (int)
     COUNT=100 #constant containing the amount of tweets per review
+    ratingList=[]
     try:
         if row_count ==0: #If the movie has not been reviewed before THEN
             for tweet in tweepy.Cursor(api.search,q=movieChoice+"-filter:retweets",count=COUNT,lang="en",wait_on_rate_limit=True,tweet_mode="extended").items(COUNT):
@@ -122,7 +129,7 @@ def mining(movieChoice):
                         pw=pw.lower().strip()#lowercase
                         if pw in word:
                             #if the word in the file is equal to the word in the tweet.
-                            tweetRating=tweetRating+3
+                            tweetRating=tweetRating+2
                             #I felt this was a good weight, as there are over 2x more 
                             # negative words than positive within the file.
                             break
@@ -133,15 +140,15 @@ def mining(movieChoice):
                         if iw in word:
                             tweetRating=tweetRating-1
                             break
-                    movieTotal=movieTotal+tweetRating
-            #     if tweetRating>0:
-            #         ratingList.append("Positive")
-            #     if tweetRating<=0:
-            #         ratingList.append("Negative")
-            # movieP = ratingList.count("Positive")
-            # movieN = ratingList.count("Negative")
-            # movieAverage=movieP/movieN 
-            appendTable(movieChoice)
+                if tweetRating>0:
+                     ratingList.append("Positive")
+                if tweetRating<=0:
+                     ratingList.append("Negative")
+            movieP = ratingList.count("Positive")
+            movieN = ratingList.count("Negative")
+            movieAverage=movieP/movieN 
+            print(movieAverage)
+            appendTable(movieChoice,movieAverage)
         else:
             print("This Movie already exists within the database.")
     except ZeroDivisionError:
@@ -166,7 +173,6 @@ def handle_data():
     try:
         movieChoice=request.form["projectFilePath"]
         movieChoice=movieChoice.upper()
-        api=oAuth()
         movieInfo=omdb.search_movie(movieChoice)
         raw=movieInfo[0]
         for i in raw:
@@ -175,6 +181,15 @@ def handle_data():
             if noPunc.upper() == movieChoice or raw[i].upper() == movieChoice:
                 movieChoice=raw[i]
                 mining(movieChoice)
+                metaData=getMovieMeta(movieChoice)
+                timeYear=metaData[2]
+                img=metaData[3]
+                rating=metaData[4]
+                plot=metaData[5]
+                genre=metaData[6]
+                imdb=metaData[7]
+                metacritic=metaData[8]
+                movieTotal=metaData[9]
                 return render_template("DisplayMovie.html", movieName=movieChoice)
             else:
                 return render_template("mainError.html", error="This movie does not exist, try again.")
