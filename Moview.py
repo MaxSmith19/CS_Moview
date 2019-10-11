@@ -182,15 +182,7 @@ def handle_data():
                 movieChoice=raw[i]
                 mining(movieChoice)
                 metaData=getMovieMeta(movieChoice)
-                timeYear=metaData[2]
-                img=metaData[3]
-                rating=metaData[4]
-                plot=metaData[5]
-                genre=metaData[6]
-                imdb=metaData[7]
-                metacritic=metaData[8]
-                movieTotal=metaData[9]
-                return render_template("DisplayMovie.html", movieName=movieChoice)
+                return render_template("DisplayMovie.html", movieName=movieChoice, timeYear=metaData[2],img=metaData[3],rating=metaData[4],plot=metaData[5],genre=metaData[6],imdb=metaData[7],metacritic=metaData[8],movieTotal=metaData[9])
             else:
                 return render_template("mainError.html", error="This movie does not exist, try again.")
     except werkzeug.exceptions.BadRequestKeyError:
