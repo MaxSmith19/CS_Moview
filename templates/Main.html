@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/mainStylesheet.css') }}?v=873547894612416127731765167121372137516751372137516513712371576127312751672137217517621761527612765176127615672176126712">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/mainStylesheet.css') }}?v=87547894612416127731765167121372137516751372137516513712371576127312751672137217517621761527612765176127615672176126712">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans|Oswald&display|Turret+Road=swap" rel="stylesheet">
     <body> 
           <div class="sidebar left"></div>
           <div class="center">
-            <img src="Logo.png" alt="Moview logo" class="logo">
+            <img src="Images/Logo.png" alt="Moview logo" class="logo">
             <form action="{{ url_for('handle_data') }}" method="POST">
                 <input class="searchBar" id="projectFilePath" type="text" name = "projectFilePath" placeholder="Enter your movie!">
                 <input type="Submit" class="submit">

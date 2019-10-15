@@ -50,3 +50,19 @@ body{
     padding-right: 5%;
     padding-top: 50px;
 }
+.poster{
+    position: absolute;
+    left: 30%;
+    right: 70%;
+    height: 500px;
+    width: 41.5%;
+    top:30.5%;
+    border: 5px solid black;
+}
+.rating{
+    position: absolute;
+    left:30%;
+    right:70%;
+    width: 20.75;
+    top: 1000px;
+}
