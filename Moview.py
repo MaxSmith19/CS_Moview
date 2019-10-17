@@ -29,7 +29,7 @@ def getMovieMeta(movieChoice):
     )
     mycursor=mydb.cursor(buffered=True)
     sql = "SELECT * from movieInfo WHERE movieName = %s"
-    values=movieChoice,
+    values=movieChoice, 
     mycursor.execute(sql,values)
     mydb.commit()
     movieMeta=mycursor.fetchone()
@@ -44,7 +44,7 @@ def movieInfo(movieChoice, intID, movieTotal):
         database="ms42220_moview"
     )
     mycursor=mydb.cursor(buffered=True)
-    movieInfo=omdb.get(title=movieChoice, tomatoes=True, fullplot=True)
+    movieInfo=omdb.get(title=movieChoice, tomatoes=True, fullplot=False)
     timeYear=movieInfo["year"]
     img=movieInfo["poster"]
     rating=movieInfo["rated"]
@@ -182,7 +182,9 @@ def handle_data():
                 movieChoice=raw[i]
                 mining(movieChoice)
                 metaData=getMovieMeta(movieChoice)
-                return render_template("DisplayMovie.html", movieName=movieChoice, timeYear=metaData[2],img=metaData[3],rating=metaData[4],plot=metaData[5],genre=metaData[6],imdb=metaData[7],metacritic=metaData[8],movieTotal=metaData[9])
+                genreSplit=metaData[6].split(",")
+                genre=genreSplit[0]
+                return render_template("DisplayMovie.html", movieName=movieChoice, timeYear=metaData[2],img=metaData[3],rating=metaData[4],plot=metaData[5],genre=genre,imdb=metaData[7],metacritic=metaData[8],movieTotal=metaData[9])
             else:
                 return render_template("mainError.html", error="This movie does not exist, try again.")
     except werkzeug.exceptions.BadRequestKeyError:
@@ -190,7 +192,9 @@ def handle_data():
     except IndexError:
        return render_template("mainError.html", error="This movie does not exist, try again.")
     except KeyError:
-        return redirect(url_for("main"))  
+        return redirect(url_for("main"))#
+    except TypeError:
+        return render_template("mainError.html", error="An Error occured, try again")  
 
     
 if __name__ == '__main__':

@@ -59,10 +59,16 @@ body{
     top:30.5%;
     border: 5px solid black;
 }
-.rating{
+.plot{
     position: absolute;
-    left:30%;
-    right:70%;
-    width: 20.75;
-    top: 1000px;
+    left: 30%;
+    right: 70%;
+    width: 41.5%;
+    top: 730px;
+    border: 5px solid black;
+    font-family: "Open Sans", sans-serif
+
+}
+.genre{
+    left: 80%;
 }

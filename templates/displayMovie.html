@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/stylesheet.css') }}?v=89789789789789789789789789789123133">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/stylesheet.css') }}?v=878779789789789123133">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans|Oswald&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="sidebar left"></div>
     <div class="sidebar right"></div>
-    <div class="logo"><a href="{{ url_for('main') }}"><img src="/Images/Logo.png" clas="logo" ></img></a></div>
+    <div class="logo"><a href="{{ url_for('main') }}"><img src="/Static/Logo.png" class="logo" ></img></a></div>
     <div class="movieInfo">
-    <span style="white-space: nowrap" class="movieName">{{movieName}}</span>
+    <span style="white-space: nowrap" class="movieName">{{movieName}}, {{rating}}</span>
+    <h1 class="genre">{{genre}}</h1>
     </div>
     <div class="movieMeta">
      <img src="{{img}}" class="poster">
-     <span style="white-space: nowrap" class="rating">{{rating}}</span> 
+     <p class="plot">{{plot}}</p>> 
     </div>
-    
 </body> 
 
-</html>
+</html> 
