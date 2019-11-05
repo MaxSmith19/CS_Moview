@@ -1,21 +1,77 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/stylesheet.css') }}?v=878779789789789123133">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans|Oswald&display=swap" rel="stylesheet">
-</head>
-<body>
-    <div class="sidebar left"></div>
-    <div class="sidebar right"></div>
-    <div class="logo"><a href="{{ url_for('main') }}"><img src="/Static/Logo.png" class="logo" ></img></a></div>
-    <div class="movieInfo">
-        <span style="white-space: nowrap" class="movieName">{{movieName}}, {{rating}}</span>
-        <h1 class="genre">{{genre}}</h1>
-    </div>
-    <div class="movieMeta">
-     <img src="{{img}}" class="poster">
-     <p class="plot">{{plot}}</p>> 
-    </div>
-</body> 
 
-</html> 
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>movieInfo</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='assets/bootstrap/css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='assets/css/styles.css')}}">
+    <script src="{{url_for('static',filename='assets/js/jquery.min.js')}}"></script>
+    <script src="{{url_for('static',filename='assets/bootstrap/js/bootstrap.min.js')}}"></script>
+</head>
+
+<body>
+    <div class="row">
+        <div class="col offset-md-5 offset-lg-3 offset-xl-4 text-right">
+            <h1 class="display-1 text-center" style="margin: 53px;">Moview</h1>
+        </div>
+        <div class="col">
+            <h1></h1>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="row">
+        <div class="col"></div>
+        <div class="col col-top col-left" id="Dashboard" style="width: 191.1px;height: 84.8px;">
+            <h4>{{movieChoice}}</h4>
+        </div>
+        <div class="col col-top col-right">
+            <h5>BBFC Rating:&nbsp;{{rating}}</h5>
+        </div>
+        <div class="col"></div>
+    </div>
+    <div class="row">
+        <div class="col"></div>
+        <div class="col col-left col-img col-right" id="Dashboard"><img src="{{moviePoster}}"></div>
+        <div class="col col-img col-right" id="Dashboard">
+            <p>{{plot}}<br><br></p>
+        </div>
+        <div class="col"></div>
+    </div>
+    <div class="row">
+        <div class="col"></div>
+        <div class="col col-left col-bottom" style="width: 308.7px;">
+            <h4 class="text-left">{{movieTotal}} /10</h4>
+        </div>
+        <div class="col text-nowrap col-left col-right col-bottom" id="Dashboard">
+            <p>{{imdb}}</p>
+            <p>{{metacritic}}<br></p>
+        </div>
+        <div class="col"></div>
+    </div>
+    <div class="row">
+        <div class="col"></div>
+        <div class="col col-left col-bottom" style="height: 80px;">
+            <h6>Highest rated tweet:</h6>
+        </div>
+        <div class="col col-right col-bottom">
+            <p class="text-break">{{highestTweet}}<br><br></p>
+        </div>
+        <div class="col"></div>
+    </div>
+    <div class="row">
+        <div class="col"></div>
+        <div class="col col-left col-bottom">
+            <h6>Lowest rated tweet:</h6>
+        </div>
+        <div class="col col-right col-bottom" style="height: 80px;">
+            <p>{{lowestTweet}}</p>
+        </div>
+        <div class="col"></div>
+    </div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+</body>
+
+</html>

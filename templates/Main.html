@@ -1,17 +1,41 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/mainStylesheet.css') }}?v=87547894612416127731765167121372137516751372137516513712371576127312751672137217517621761527612765176127615672176126712">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans|Oswald&display|Turret+Road=swap" rel="stylesheet">
-    <body> 
-          <div class="sidebar left"></div>  
-          <div class="center">
-            <img src="/Static/Logo.png" alt="Moview logo" class="logo">
-            <form action="{{ url_for('handle_data') }}" method="POST">
-                <input class="searchBar" id="projectFilePath" type="text" name = "projectFilePath" placeholder="Enter your movie!">
-                <input type="Submit" class="submit">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>movieInfo</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='assets/bootstrap/css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='assets/css/styles.css')}}">
+    <script src="{{url_for('static',filename='assets/js/jquery.min.js')}}"></script>
+    <script src="{{url_for('static',filename='assets/bootstrap/js/bootstrap.min.js')}}"></script>
+</head>
+
+<body>
+    <div class="row">
+        <div class="col">
+            <h1 class="display-3 text-center" style="margin: 0px 0px 60px;height: 84px;">Moview</h1>
+            <div class="row">
+                <div class="col-lg-6 offset-lg-2 offset-xl-3 text-center">
+                    <p class="text-left">Type your movie into the search bar and click "Search!" to get started!</p>
+                </div>
+            </div>
+            <form action="{{url_for('handle_data')}}" method="POST">
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group text-center"><input type="search" name="projectFilePath" style="width: 676px;height: 42px;" placeholder="Enter your movie"><button class="btn btn-primary" type="button" style="height: 42px;background-color: rgb(255,15,0);">Search!</button></div>
+                    </div>
+                </div>
             </form>
-          </div>
-          <div class="sidebar right"></div>
-    </body>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-8 col-xl-3 offset-lg-2 offset-xl-3 text-left" style="width: 756px;">
+            <h1 style="margin: 0px;">{{errorHandle}}</h1>
+            <p>{{error}}<br><br></p>
+        </div>
+    </div>
+    
+</body>
+
 </html>
